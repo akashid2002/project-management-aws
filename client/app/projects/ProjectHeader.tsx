@@ -60,7 +60,6 @@ const ProjectHeader = ({ activeTab, setActiveTab }: Props) => {
               className="dark:border-dark-secondary dark:bg-dark-secondary rounded-md border py-1 pr-4 pl-10 focus:outline-none dark:text-white"
             />
             <Grid3X3 className="absolute top-2 left-3 h-4 w-4 text-gray-400 dark:text-neutral-500" />
-            asdas
           </div>
         </div>
       </div>

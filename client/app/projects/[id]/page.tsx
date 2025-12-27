@@ -2,15 +2,13 @@
 
 import React, { useState } from "react";
 import ProjectHeader from "@/app/projects/ProjectHeader";
+import BoardView from "../BoardView";
+import { useParams } from "next/navigation";
 
-type Props = {
-  params: {
-    id: string;
-  };
-};
-
-const Page = ({ params }: Props) => {
+const Page = () => {
+  const params = useParams();
   const { id } = params;
+
   const [activeTab, setActiveTab] = useState("Board");
   const [isModalNewTaskOpen, setIsModalNewTaskOpen] = useState(false);
 
@@ -18,7 +16,9 @@ const Page = ({ params }: Props) => {
     <div>
       {/* New Task Modal */}
       <ProjectHeader activeTab={activeTab} setActiveTab={setActiveTab} />
-      {/* {activeTab === "Board" && <Board />} */}
+      {activeTab === "Board" && (
+        <BoardView id={id} setIsModalNewTaskOpen={setIsModalNewTaskOpen} />
+      )}
     </div>
   );
 };
