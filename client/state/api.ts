@@ -29,6 +29,7 @@ export interface User {
   cognitoId?: string;
   profilePictureUrl: string;
   teamId?: number;
+  email?: string;
 }
 
 export interface Attachment {
@@ -64,6 +65,12 @@ export interface Task {
   assignee?: User;
   comments?: Comment[];
   attachments?: Attachment[];
+}
+
+export interface SearchResults {
+  tasks?: Task[];
+  projects?: Project[];
+  users?: User[];
 }
 
 export const api = createApi({
@@ -110,6 +117,9 @@ export const api = createApi({
         { type: "Tasks", id: taskId },
       ],
     }),
+    search: build.query<SearchResults, string>({
+      query: (query) => `search?query=${query}`,
+    }),
   }),
 });
 
@@ -119,4 +129,5 @@ export const {
   useGetTasksQuery,
   useCreateTaskMutation,
   useUpdateTaskStatusMutation,
+  useSearchQuery,
 } = api;

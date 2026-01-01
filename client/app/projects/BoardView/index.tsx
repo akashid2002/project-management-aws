@@ -5,7 +5,7 @@ import {
 } from "@/state/api";
 import { EllipsisVertical, MessageSquareMore, Plus } from "lucide-react";
 import React from "react";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { DndProvider, DragSourceMonitor, DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { format } from "date-fns";
 import Image from "next/image";
@@ -24,8 +24,6 @@ const BoardView = ({ id, setIsModalNewTaskOpen }: BoardProps) => {
     error,
   } = useGetTasksQuery({ projectId: Number(id) });
 
-  console.log("Tasks in BoardView:", id);
-
   const [updateTaskStatus] = useUpdateTaskStatusMutation();
 
   const moveTask = (taskId: number, newStatus: string) => {
@@ -33,6 +31,7 @@ const BoardView = ({ id, setIsModalNewTaskOpen }: BoardProps) => {
   };
 
   if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>An error occured while fetching tasks.</div>
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -67,14 +66,14 @@ const TaskColumn = ({
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "task",
     drop: (item: { id: number }) => moveTask(item.id, status),
-    collect: (monitor: any) => ({
+    collect: (monitor: DropTargetMonitor) => ({
       isOver: !!monitor.isOver(),
     }),
   }));
 
   const tasksCount = tasks.filter((task) => task.status === status).length;
 
-  const statusColor: any = {
+  const statusColor: Record<string, string> = {
     "To Do": "#2563EB",
     "Work In Progress": "#059669",
     "Under Review": "#D97706",
@@ -134,7 +133,7 @@ const Task = ({ task }: TaskProps) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "task",
     item: { id: task.id },
-    collect: (monitor: any) => ({
+    collect: (monitor: DragSourceMonitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   }));
